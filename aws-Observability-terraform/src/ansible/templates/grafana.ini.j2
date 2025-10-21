@@ -1,0 +1,25 @@
+[paths]
+data = /var/lib/grafana
+logs = /var/log/grafana
+plugins = /var/lib/grafana/plugins
+provisioning = /etc/grafana/conf/provisioning
+
+[server]
+http_port = 3000
+domain = {{ hostvars[groups['prom_grafana'][0]]['ansible_host'] }}
+root_url = http://{{ hostvars[groups['prom_grafana'][0]]['ansible_host'] }}:3000/
+serve_from_sub_path = false
+
+[security]
+admin_user = admin
+admin_password = admin
+
+[users]
+default_theme = light
+
+[auth.anonymous]
+enabled = true
+
+[log]
+mode = console
+level = info
