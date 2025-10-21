@@ -37,6 +37,7 @@ variable "custom_ip_cidr" {
 variable "Terraform_ip_cidr" {
   description = "A Terraform instance IP address/CIDR to allow access."
   type        = string
-  default     = yy.yyy.yyy.yy/32"
+  default     = "yy.yyy.yyy.yy/32"
 }
+
 
