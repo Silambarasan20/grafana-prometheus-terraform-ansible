@@ -1,0 +1,5 @@
+# Centralized semantic version variables for monitoring components
+node_exporter_version: "1.9.1"
+prometheus_version: "2.48.0"
+grafana_version: "12.0.0"
+# Use semantic version strings (MAJOR.MINOR.PATCH). Update here to change versions used by the playbook.
