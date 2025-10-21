@@ -1,0 +1,16 @@
+[Unit]
+Description=Grafana Server (Standalone Binary)
+After=network.target
+
+[Service]
+User=grafana
+Group=grafana
+Type=simple
+ExecStart=/etc/grafana/bin/grafana-server \
+  --homepath=/etc/grafana \
+  --config=/etc/grafana/conf/grafana.ini
+Restart=on-failure
+LimitNOFILE=10000
+
+[Install]
+WantedBy=multi-user.target
