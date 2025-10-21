@@ -1,7 +1,7 @@
 variable "vpc_cidr" {
   description = "CIDR block for the VPC"
   type        = string
-  default     = "12.0.0.0/16"
+  default     = "10.0.0.0/16"
 }
 
 variable "azs" {
@@ -39,3 +39,4 @@ variable "Terraform_ip_cidr" {
   type        = string
   default     = yy.yyy.yyy.yy/32"
 }
+
