@@ -1,0 +1,91 @@
+- name: Install Grafana (Standalone Binary)
+  hosts: prom_grafana
+  become: true
+  vars_files:
+    - ../vars.yml  # Make sure grafana_version is defined here
+
+  tasks:
+    - name: Install prerequisites
+      apt:
+        name:
+          - wget
+          - tar
+        state: present
+
+    - name: Download Grafana archive
+      get_url:
+        url: "https://dl.grafana.com/oss/release/grafana-{{ grafana_version }}.linux-amd64.tar.gz"
+        dest: /tmp/grafana.tar.gz
+        mode: '0644'
+
+    - name: Remove existing /etc/grafana directory (if any)
+      file:
+        path: /etc/grafana
+        state: absent
+
+
+    - name: Create grafana user
+      user:
+        name: grafana
+        shell: /usr/sbin/nologin
+        system: yes
+        create_home: no
+
+    - name: Create grafana directory
+      file:
+        path: /etc/grafana
+        state: directory
+        owner: grafana
+        group: grafana
+        mode: '0755'
+
+    - name: Extract Grafana into /etc/grafana
+      unarchive:
+        src: /tmp/grafana.tar.gz
+        dest: /etc/grafana
+        remote_src: yes
+        extra_opts: [--strip-components=1]
+        creates: /etc/grafana/bin/grafana-server
+
+    - name: Create required directories for Grafana
+      file:
+        path: "{{ item }}"
+        state: directory
+        owner: grafana
+        group: grafana
+        mode: '0755'
+      loop:
+        - /var/lib/grafana
+        - /var/log/grafana
+
+    - name: Set ownership of /etc/grafana
+      file:
+        path: /etc/grafana
+        owner: grafana
+        group: grafana
+        recurse: yes
+
+    - name: Deploy grafana.ini configuration
+      template:
+        src: ../templates/grafana.ini.j2
+        dest: /etc/grafana/conf/grafana.ini
+        owner: grafana
+        group: grafana
+        mode: '0644'
+
+    - name: Deploy Grafana systemd service
+      template:
+        src: ../templates/grafana.yml.j2
+        dest: /etc/systemd/system/grafana.service
+        mode: '0644'
+      notify: Reload systemd
+
+    - name: Enable and start Grafana
+      systemd:
+        name: grafana
+        enabled: yes
+        state: started
+
+  handlers:
+    - name: Reload systemd
+      command: systemctl daemon-reload
