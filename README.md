@@ -1,3 +1,15 @@
+# Prerequisites:
+
+1. An EC2 instance (or workstation) with network access to AWS.
+2. Terraform installed on the machine.
+3. If running from an EC2 instance: attach an IAM role (instance profile) that has permissions to create VPC, subnets, route tables, and related networking resources. When an appropriate instance profile is attached, no AWS access keys are required on the instance.
+4. AWS CLI is optional but can help verify which identity the instance is using: aws sts get-caller-identity.
+
+# Notes:
+- No AWS credentials (AWS_ACCESS_KEY_ID/AWS_SECRET_ACCESS_KEY) are required on the instance when using an attached IAM role.
+- The instance must be able to reach the Instance Metadata Service (IMDS) to retrieve role credentials.
+
+
 # grafana-prometheus-terraform-ansible
 Infrastructure as Code setup for Grafana and Prometheus using Terraform and Ansible
 
